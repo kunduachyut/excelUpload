@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "convert-excel-to-json": "^1.7.0",
     "firebase": "^10.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
+    "@types/convert-excel-to-json": "^1.7.4",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",

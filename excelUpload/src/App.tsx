@@ -1,11 +1,19 @@
+'use strict';
 import React, { useState } from "react";
 import "./App.css";
 import { createSheetURL } from "./firebase/UploadSheet.ts";
 import toast, { Toaster } from "react-hot-toast";
+// import excelToJson from "convert-excel-to-json";
+import fs from "fs";
+// import convertExcelToJson, * as convertExcel from "convert-excel-to-json";
+import * as convertExcel from "convert-excel-to-json";
+// const excelToJson = require('convert-excel-to-json');
+ 
 
 const App: React.FC = () => {
   const [visibility, setVisibility] = useState<boolean>(false);
   const [excelURL, setExcelURL] = useState<string>("");
+  const [filepath, setFilepath] = useState("");
   const defaultBlob = new Blob(["Default Content"], { type: "text/plain" });
 
   const [imgFile, setImageFile] = useState<
@@ -13,9 +21,20 @@ const App: React.FC = () => {
   >(defaultBlob);
 
   const getFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilepath(event.target.files![0].webkitRelativePath)
     setVisibility(false);
     const targetFiles = event.target.files;
-    if (targetFiles && targetFiles[0].type == "application/vnd.ms-excel") {
+    if (targetFiles) {
+      event.onload = (e) => {
+        const data = e.target.result;
+        // Now you can use 'data' for further processing
+        convertExcelToJson(data);
+      };
+      const result = excelToJson({
+        // sourceFile: fs.readFileSync(filepath)
+        source:fs.readFileSync(filepath)
+    });
+    console.log(result)
       setImageFile(targetFiles[0]);
       console.log(targetFiles[0].type);
     }
@@ -52,6 +71,7 @@ const App: React.FC = () => {
           Preview Image
         </label>
         <input
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           type="file"
           id="preview"
           onChange={(event) => getFile(event)}
